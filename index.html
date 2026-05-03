@@ -4,849 +4,579 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#FF6B35">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F2F2F7">
 <link rel="manifest" href="manifest.json">
-<title>Прикорм Малыша</title>
+<title>Прикорм</title>
 <style>
 :root {
-  --primary: #FF6B35;
-  --primary-light: #FF8F5E;
-  --primary-dark: #E55A2B;
-  --bg: #FFF8F0;
+  --bg: #F2F2F7;
   --card: #FFFFFF;
-  --text: #2D2D2D;
-  --text-light: #777;
-  --green: #4CAF50;
-  --green-light: #E8F5E9;
-  --red: #F44336;
-  --red-light: #FFEBEE;
-  --yellow: #FFC107;
-  --yellow-light: #FFF8E1;
-  --blue: #2196F3;
-  --blue-light: #E3F2FD;
-  --purple: #9C27B0;
-  --purple-light: #F3E5F5;
-  --radius: 16px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --text: #1C1C1E;
+  --text2: #3C3C43;
+  --text3: #8E8E93;
+  --separator: rgba(60,60,67,0.1);
+  --blue: #007AFF;
+  --green: #34C759;
+  --orange: #FF9500;
+  --red: #FF3B30;
+  --purple: #AF52DE;
+  --pink: #FF2D55;
+  --teal: #5AC8FA;
+  --indigo: #5856D6;
+  --fill: rgba(120,120,128,0.08);
+  --fill2: rgba(120,120,128,0.16);
+  --radius: 14px;
+  --radius-lg: 20px;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 body {
-  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
   background: var(--bg); color: var(--text);
-  max-width: 480px; margin: 0 auto;
-  min-height: 100vh; padding-bottom: 80px;
+  max-width: 430px; margin: 0 auto;
+  min-height: 100vh; padding-bottom: 90px;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Header */
+/* iOS-style large title header */
 .header {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: white; padding: 20px 20px 24px; position: sticky; top: 0; z-index: 100;
-  border-radius: 0 0 24px 24px;
-  box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+  padding: 60px 20px 16px; background: var(--bg);
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 }
-.header h1 { font-size: 22px; font-weight: 700; }
-.header .subtitle { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.header h1 {
+  font-size: 34px; font-weight: 700; letter-spacing: -0.4px; color: var(--text);
+}
+.header .subtitle {
+  font-size: 15px; color: var(--text3); margin-top: 2px; font-weight: 400;
+}
 
-/* Bottom nav */
-.bottom-nav {
+/* Bottom tab bar */
+.tab-bar {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 480px; background: white;
-  display: flex; justify-content: space-around; padding: 8px 0 12px;
-  box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
-  border-radius: 20px 20px 0 0; z-index: 100;
+  width: 100%; max-width: 430px;
+  background: rgba(249,249,249,0.94);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  display: flex; justify-content: space-around;
+  padding: 6px 0 28px; z-index: 100;
+  border-top: 0.5px solid var(--separator);
 }
-.nav-item {
+.tab-item {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  font-size: 10px; color: var(--text-light); cursor: pointer;
-  padding: 4px 12px; border: none; background: none; transition: all 0.2s;
+  font-size: 10px; color: var(--text3); cursor: pointer;
+  padding: 4px 0; border: none; background: none;
+  font-family: inherit; font-weight: 500; transition: color 0.15s;
 }
-.nav-item.active { color: var(--primary); }
-.nav-item .icon { font-size: 24px; }
+.tab-item.active { color: var(--blue); }
+.tab-item .icon { font-size: 24px; height: 28px; display: flex; align-items: center; }
 
 /* Pages */
-.page { display: none; padding: 16px; }
+.page { display: none; padding: 0 16px; }
 .page.active { display: block; }
 
-/* Cards */
-.card {
+/* iOS grouped list */
+.section-header {
+  font-size: 13px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 24px 4px 8px;
+}
+.grouped-card {
   background: var(--card); border-radius: var(--radius);
-  padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 8px;
 }
-.card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.grouped-card .row {
+  display: flex; align-items: center; padding: 12px 16px; gap: 12px;
+  min-height: 44px; position: relative;
+}
+.grouped-card .row:not(:last-child)::after {
+  content: ''; position: absolute; bottom: 0; left: 56px; right: 0;
+  height: 0.5px; background: var(--separator);
+}
+.row-icon { font-size: 28px; width: 36px; text-align: center; flex-shrink: 0; }
+.row-content { flex: 1; min-width: 0; }
+.row-title { font-size: 17px; font-weight: 400; color: var(--text); }
+.row-subtitle { font-size: 13px; color: var(--text3); margin-top: 1px; }
+.row-accessory { font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 6px; }
+.acc-green { background: rgba(52,199,89,0.12); color: var(--green); }
+.acc-orange { background: rgba(255,149,0,0.12); color: var(--orange); }
+.acc-red { background: rgba(255,59,48,0.12); color: var(--red); }
 
-/* Month selector */
-.month-selector {
-  display: flex; gap: 8px; overflow-x: auto; padding: 12px 0;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+/* Age picker */
+.age-picker {
+  background: var(--card); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 14px;
 }
-.month-selector::-webkit-scrollbar { display: none; }
-.month-btn {
-  flex-shrink: 0; padding: 10px 20px; border-radius: 24px;
-  border: 2px solid #eee; background: white; font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap;
-}
-.month-btn.active {
-  background: var(--primary); color: white; border-color: var(--primary);
+.age-picker .emoji { font-size: 44px; }
+.age-picker .info { flex: 1; }
+.age-picker .info h3 { font-size: 20px; font-weight: 600; }
+.age-picker .info p { font-size: 13px; color: var(--text3); margin-top: 2px; }
+.age-picker select {
+  padding: 8px 12px; border-radius: 8px;
+  background: var(--fill); border: none;
+  font-size: 15px; font-weight: 600; color: var(--blue);
+  font-family: inherit; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
 }
 
-/* Product list */
-.product-item {
-  display: flex; align-items: center; padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0; gap: 12px;
+/* Tip card */
+.tip-card {
+  background: linear-gradient(135deg, rgba(0,122,255,0.08), rgba(88,86,214,0.08));
+  border-radius: var(--radius); padding: 16px; margin: 8px 0;
 }
-.product-item:last-child { border-bottom: none; }
-.product-emoji { font-size: 28px; width: 40px; text-align: center; }
-.product-info { flex: 1; }
-.product-name { font-size: 14px; font-weight: 600; }
-.product-desc { font-size: 12px; color: var(--text-light); margin-top: 2px; }
-.product-tag {
-  font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600;
-}
-.tag-new { background: var(--green-light); color: var(--green); }
-.tag-caution { background: var(--yellow-light); color: #F57F17; }
-.tag-avoid { background: var(--red-light); color: var(--red); }
+.tip-card .label { font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 6px; }
+.tip-card .text { font-size: 15px; color: var(--text2); line-height: 1.45; }
 
-/* Tracker */
-.tracker-date {
+/* Stat pills */
+.stats-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat-pill {
+  flex: 1; background: var(--card); border-radius: var(--radius);
+  padding: 14px 12px; text-align: center;
+}
+.stat-pill .value { font-size: 28px; font-weight: 700; color: var(--blue); }
+.stat-pill .label { font-size: 11px; color: var(--text3); margin-top: 2px; font-weight: 500; }
+
+/* Tracker date nav */
+.date-nav {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
-.tracker-date h3 { font-size: 16px; }
-.date-nav { display: flex; gap: 8px; }
+.date-nav h3 { font-size: 20px; font-weight: 600; }
 .date-btn {
-  width: 36px; height: 36px; border-radius: 50%; border: 1px solid #ddd;
-  background: white; font-size: 18px; cursor: pointer; display: flex;
-  align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%; border: none;
+  background: var(--fill); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue); font-weight: 600;
 }
 
-.meal-section { margin-bottom: 16px; }
-.meal-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-  font-size: 14px; font-weight: 600; color: var(--text-light);
+/* Meal sections */
+.meal-label {
+  font-size: 13px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 16px 4px 8px; display: flex; align-items: center; gap: 6px;
 }
-.meal-icon { font-size: 20px; }
-
 .logged-item {
   display: flex; align-items: center; justify-content: space-between;
-  background: #f8f8f8; padding: 10px 12px; border-radius: 12px; margin-bottom: 6px;
+  background: var(--card); padding: 12px 16px; border-radius: 12px; margin-bottom: 6px;
 }
-.logged-item .name { font-size: 13px; }
-.logged-item .amount { font-size: 12px; color: var(--text-light); }
-.delete-btn {
-  width: 24px; height: 24px; border: none; background: var(--red-light);
-  color: var(--red); border-radius: 50%; cursor: pointer; font-size: 14px;
+.logged-item .name { font-size: 15px; font-weight: 400; }
+.logged-item .amount { font-size: 13px; color: var(--text3); }
+.del-btn {
+  width: 22px; height: 22px; border: none; background: rgba(255,59,48,0.12);
+  color: var(--red); border-radius: 50%; cursor: pointer; font-size: 12px;
   display: flex; align-items: center; justify-content: center;
 }
 
-.add-meal-btn {
-  width: 100%; padding: 12px; border: 2px dashed #ddd; border-radius: 12px;
-  background: none; color: var(--primary); font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s;
+.add-btn {
+  width: 100%; padding: 12px; border: none; border-radius: 12px;
+  background: var(--fill); color: var(--blue); font-size: 15px;
+  font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: background 0.15s; margin-bottom: 4px;
 }
-.add-meal-btn:hover { border-color: var(--primary); background: #FFF5F0; }
+.add-btn:active { background: var(--fill2); }
 
-/* Modal */
-.modal-overlay {
+/* Modal (iOS sheet style) */
+.modal-bg {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5); z-index: 200; display: none;
+  background: rgba(0,0,0,0.4); z-index: 200; display: none;
   align-items: flex-end; justify-content: center;
 }
-.modal-overlay.active { display: flex; }
-.modal {
-  background: white; width: 100%; max-width: 480px;
-  border-radius: 24px 24px 0 0; padding: 24px;
-  max-height: 80vh; overflow-y: auto;
-  animation: slideUp 0.3s ease;
+.modal-bg.active { display: flex; }
+.sheet {
+  background: var(--bg); width: 100%; max-width: 430px;
+  border-radius: 14px 14px 0 0; max-height: 85vh; overflow-y: auto;
 }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal h3 { font-size: 18px; margin-bottom: 16px; }
-.modal-close {
-  position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
-  border: none; background: #f0f0f0; border-radius: 50%; font-size: 18px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
+.sheet-handle {
+  width: 36px; height: 5px; background: rgba(60,60,67,0.3);
+  border-radius: 3px; margin: 8px auto 0;
 }
+.sheet-content { padding: 20px; }
+.sheet-content h3 { font-size: 20px; font-weight: 600; margin-bottom: 16px; text-align: center; }
 
 .food-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;
 }
-.food-option {
+.food-cell {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 12px 4px; border: 2px solid #eee; border-radius: 12px;
-  cursor: pointer; transition: all 0.2s; font-size: 12px; text-align: center;
-  background: white;
+  padding: 12px 4px; border-radius: 12px; cursor: pointer;
+  background: var(--card); font-size: 12px; text-align: center;
+  font-family: inherit; border: 2px solid transparent;
+  transition: all 0.15s;
 }
-.food-option:hover, .food-option.selected { border-color: var(--primary); background: #FFF5F0; }
-.food-option .emoji { font-size: 28px; }
+.food-cell.selected { border-color: var(--blue); background: rgba(0,122,255,0.06); }
+.food-cell .emoji { font-size: 28px; }
 
-.amount-input {
-  width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px;
-  font-size: 16px; text-align: center; margin-bottom: 12px; outline: none;
+.input-field {
+  width: 100%; padding: 14px; border: none; border-radius: 12px;
+  background: var(--card); font-size: 17px; text-align: center;
+  font-family: inherit; color: var(--text); margin-bottom: 12px; outline: none;
 }
-.amount-input:focus { border-color: var(--primary); }
+.input-field::placeholder { color: var(--text3); }
 
-.submit-btn {
-  width: 100%; padding: 14px; background: var(--primary); color: white;
-  border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
-  cursor: pointer;
+.btn-primary {
+  width: 100%; padding: 16px; background: var(--blue); color: white;
+  border: none; border-radius: 14px; font-size: 17px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+}
+.btn-primary:active { opacity: 0.85; }
+.btn-secondary {
+  width: 100%; padding: 14px; background: none; color: var(--blue);
+  border: none; font-size: 17px; font-weight: 400; cursor: pointer;
+  font-family: inherit; margin-top: 4px;
 }
 
-/* Allergy tracker */
-.allergy-item {
+/* Symptom chips */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.chip {
+  padding: 8px 16px; border-radius: 20px; font-size: 14px;
+  cursor: pointer; background: var(--card); border: 1.5px solid var(--separator);
+  font-family: inherit; color: var(--text); transition: all 0.15s;
+}
+.chip.selected { background: var(--red); color: white; border-color: var(--red); }
+
+/* Allergy items */
+.allergy-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 8px;
   display: flex; align-items: center; gap: 12px;
-  padding: 12px; background: var(--red-light); border-radius: 12px;
-  margin-bottom: 8px;
+  border-left: 4px solid var(--orange);
 }
-.allergy-item .emoji { font-size: 24px; }
-.allergy-info { flex: 1; }
-.allergy-food { font-size: 14px; font-weight: 600; }
-.allergy-symptoms { font-size: 12px; color: var(--red); }
-.allergy-date { font-size: 11px; color: var(--text-light); }
-
-.symptom-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
-.symptom-chip {
-  padding: 8px 14px; border: 1px solid #ddd; border-radius: 20px;
-  font-size: 12px; cursor: pointer; background: white; transition: all 0.2s;
-}
-.symptom-chip.selected { background: var(--red); color: white; border-color: var(--red); }
+.allergy-card .emoji { font-size: 28px; }
+.allergy-card .info { flex: 1; }
+.allergy-card .food { font-size: 15px; font-weight: 600; }
+.allergy-card .symptoms { font-size: 13px; color: var(--red); margin-top: 2px; }
+.allergy-card .date { font-size: 12px; color: var(--text3); margin-top: 2px; }
 
 /* Recipes */
 .recipe-card {
-  background: var(--card); border-radius: var(--radius); overflow: hidden;
-  margin-bottom: 12px; box-shadow: var(--shadow); cursor: pointer;
+  background: var(--card); border-radius: var(--radius);
+  overflow: hidden; margin-bottom: 8px; cursor: pointer;
 }
-.recipe-header {
-  display: flex; align-items: center; gap: 12px; padding: 16px;
+.recipe-top {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
 }
-.recipe-emoji { font-size: 36px; }
-.recipe-title { font-size: 15px; font-weight: 600; }
-.recipe-meta { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+.recipe-top .emoji { font-size: 40px; }
+.recipe-top .title { font-size: 17px; font-weight: 600; }
+.recipe-top .meta { font-size: 13px; color: var(--text3); margin-top: 2px; }
 .recipe-tags { display: flex; gap: 6px; margin-top: 6px; }
 .recipe-tag {
-  font-size: 10px; padding: 2px 8px; border-radius: 8px;
-  background: var(--blue-light); color: var(--blue);
+  font-size: 11px; padding: 3px 8px; border-radius: 6px;
+  background: rgba(0,122,255,0.08); color: var(--blue); font-weight: 500;
 }
 .recipe-body {
   padding: 0 16px 16px; display: none;
-  font-size: 13px; line-height: 1.6; color: var(--text);
+  font-size: 15px; line-height: 1.5; color: var(--text2);
 }
 .recipe-body.open { display: block; }
-.recipe-body h4 { font-size: 14px; font-weight: 600; margin: 8px 0 4px; color: var(--primary); }
+.recipe-body h4 {
+  font-size: 13px; font-weight: 600; color: var(--blue);
+  text-transform: uppercase; letter-spacing: 0.3px;
+  margin: 12px 0 6px; padding-top: 12px;
+  border-top: 0.5px solid var(--separator);
+}
+.recipe-body h4:first-child { border-top: none; padding-top: 0; }
 
-/* Stats */
-.stat-row { display: flex; gap: 12px; margin-bottom: 12px; }
-.stat-box {
-  flex: 1; background: var(--card); border-radius: var(--radius);
-  padding: 16px; text-align: center; box-shadow: var(--shadow);
+/* Filter pills */
+.filter-scroll {
+  display: flex; gap: 8px; overflow-x: auto; padding: 8px 0 12px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
-.stat-value { font-size: 28px; font-weight: 700; color: var(--primary); }
-.stat-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
-
-/* Tips */
-.tip-card {
-  background: linear-gradient(135deg, var(--blue-light), #E8EAF6);
-  border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+.filter-scroll::-webkit-scrollbar { display: none; }
+.filter-pill {
+  flex-shrink: 0; padding: 8px 18px; border-radius: 20px;
+  border: none; background: var(--fill); font-size: 14px; font-weight: 500;
+  cursor: pointer; font-family: inherit; color: var(--text2);
+  transition: all 0.15s;
 }
-.tip-card .icon { font-size: 24px; margin-bottom: 8px; }
-.tip-card .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.tip-card .text { font-size: 13px; color: #555; line-height: 1.5; }
-
-/* Age banner */
-.age-banner {
-  background: linear-gradient(135deg, var(--purple-light), #FCE4EC);
-  border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
-  display: flex; align-items: center; gap: 12px;
-}
-.age-banner .emoji { font-size: 40px; }
-.age-banner .info h3 { font-size: 16px; color: var(--purple); }
-.age-banner .info p { font-size: 12px; color: var(--text-light); margin-top: 2px; }
-.age-select {
-  padding: 8px 12px; border: 2px solid var(--purple); border-radius: 10px;
-  background: white; font-size: 13px; color: var(--purple); font-weight: 600;
-  cursor: pointer;
-}
+.filter-pill.active { background: var(--blue); color: white; }
 
 /* Empty state */
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
-.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-.empty-state p { font-size: 14px; }
+.empty { text-align: center; padding: 48px 20px; }
+.empty .icon { font-size: 52px; margin-bottom: 12px; }
+.empty p { font-size: 15px; color: var(--text3); }
+
+/* Notification toast */
+#toast {
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+  background: rgba(28,28,30,0.92); color: white;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  padding: 12px 24px; border-radius: 14px; font-size: 15px;
+  display: none; z-index: 300; font-weight: 500;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+#toast.show { display: block; animation: toastIn 0.3s ease; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } }
+
+/* Level up */
+#levelup {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-size: 36px; font-weight: 700; color: var(--blue); display: none;
+  text-align: center; z-index: 300;
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>Прикорм Малыша</h1>
-  <div class="subtitle" id="header-subtitle">Календарь прикорма с 6 месяцев</div>
+  <h1 id="page-title">Прикорм</h1>
+  <div class="subtitle" id="page-subtitle">Календарь прикорма с 6 месяцев</div>
 </div>
 
-<!-- ========== PAGE: CALENDAR ========== -->
+<!-- ====== CALENDAR ====== -->
 <div class="page active" id="page-calendar">
-  <div class="age-banner">
+  <div class="age-picker">
     <div class="emoji">👶</div>
     <div class="info">
-      <h3 id="baby-age-text">Возраст: 6 месяцев</h3>
-      <p>Выберите возраст малыша</p>
+      <h3 id="age-text">6 месяцев</h3>
+      <p>Возраст малыша</p>
     </div>
-    <select class="age-select" id="age-select" onchange="changeAge(this.value)">
-      <option value="6">6 мес</option>
-      <option value="7">7 мес</option>
-      <option value="8">8 мес</option>
-      <option value="9">9 мес</option>
-      <option value="10">10 мес</option>
-      <option value="11">11 мес</option>
+    <select id="age-sel" onchange="setAge(this.value)">
+      <option value="6">6 мес</option><option value="7">7 мес</option>
+      <option value="8">8 мес</option><option value="9">9 мес</option>
+      <option value="10">10 мес</option><option value="11">11 мес</option>
       <option value="12">12+ мес</option>
     </select>
   </div>
 
-  <div class="card">
-    <div class="card-title">🥕 Продукты для введения</div>
-    <div id="products-list"></div>
-  </div>
+  <div class="section-header">Продукты для введения</div>
+  <div class="grouped-card" id="product-list"></div>
 
-  <div class="tip-card" id="age-tip">
-    <div class="icon">💡</div>
-    <div class="title">Совет</div>
-    <div class="text" id="tip-text">Начинайте с одного нового продукта каждые 3-5 дней, чтобы отследить аллергическую реакцию.</div>
+  <div class="tip-card" id="tip-card">
+    <div class="label">Совет</div>
+    <div class="text" id="tip-text">Начинайте с одного нового продукта каждые 3-5 дней.</div>
   </div>
 </div>
 
-<!-- ========== PAGE: TRACKER ========== -->
+<!-- ====== TRACKER ====== -->
 <div class="page" id="page-tracker">
-  <div class="tracker-date">
-    <div class="date-nav">
-      <button class="date-btn" onclick="changeDate(-1)">&lt;</button>
-    </div>
-    <h3 id="tracker-date-text">Сегодня</h3>
-    <div class="date-nav">
-      <button class="date-btn" onclick="changeDate(1)">&gt;</button>
-    </div>
+  <div class="date-nav">
+    <button class="date-btn" onclick="shiftDate(-1)">&lsaquo;</button>
+    <h3 id="date-text">Сегодня</h3>
+    <button class="date-btn" onclick="shiftDate(1)">&rsaquo;</button>
   </div>
 
-  <div class="stat-row">
-    <div class="stat-box">
-      <div class="stat-value" id="stat-meals">0</div>
-      <div class="stat-label">Приемов пищи</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value" id="stat-products">0</div>
-      <div class="stat-label">Продуктов</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value" id="stat-ml">0</div>
-      <div class="stat-label">мл / г</div>
-    </div>
+  <div class="stats-row">
+    <div class="stat-pill"><div class="value" id="s-meals">0</div><div class="label">Приемов</div></div>
+    <div class="stat-pill"><div class="value" id="s-items">0</div><div class="label">Продуктов</div></div>
+    <div class="stat-pill"><div class="value" id="s-ml">0</div><div class="label">мл / г</div></div>
   </div>
 
-  <div class="meal-section">
-    <div class="meal-header"><span class="meal-icon">🌅</span> Завтрак</div>
-    <div id="meal-breakfast"></div>
-    <button class="add-meal-btn" onclick="openAddMeal('breakfast')">+ Добавить</button>
-  </div>
+  <div class="meal-label">🌅 Завтрак</div>
+  <div id="m-breakfast"></div>
+  <button class="add-btn" onclick="openAdd('breakfast')">Добавить</button>
 
-  <div class="meal-section">
-    <div class="meal-header"><span class="meal-icon">☀️</span> Обед</div>
-    <div id="meal-lunch"></div>
-    <button class="add-meal-btn" onclick="openAddMeal('lunch')">+ Добавить</button>
-  </div>
+  <div class="meal-label">☀️ Обед</div>
+  <div id="m-lunch"></div>
+  <button class="add-btn" onclick="openAdd('lunch')">Добавить</button>
 
-  <div class="meal-section">
-    <div class="meal-header"><span class="meal-icon">🌙</span> Ужин</div>
-    <div id="meal-dinner"></div>
-    <button class="add-meal-btn" onclick="openAddMeal('dinner')">+ Добавить</button>
-  </div>
+  <div class="meal-label">🌙 Ужин</div>
+  <div id="m-dinner"></div>
+  <button class="add-btn" onclick="openAdd('dinner')">Добавить</button>
 
-  <div class="meal-section">
-    <div class="meal-header"><span class="meal-icon">🍼</span> Перекус</div>
-    <div id="meal-snack"></div>
-    <button class="add-meal-btn" onclick="openAddMeal('snack')">+ Добавить</button>
-  </div>
+  <div class="meal-label">🍼 Перекус</div>
+  <div id="m-snack"></div>
+  <button class="add-btn" onclick="openAdd('snack')">Добавить</button>
 </div>
 
-<!-- ========== PAGE: ALLERGY ========== -->
+<!-- ====== ALLERGY ====== -->
 <div class="page" id="page-allergy">
-  <div class="card">
-    <div class="card-title">⚠️ Отслеживание реакций</div>
-    <p style="font-size:13px;color:var(--text-light);margin-bottom:12px;">Записывайте любые реакции на новые продукты</p>
-    <button class="add-meal-btn" onclick="openAllergyModal()">+ Записать реакцию</button>
-  </div>
-
+  <button class="add-btn" style="margin-bottom:12px" onclick="openAllergySheet()">Записать реакцию</button>
   <div id="allergy-list">
-    <div class="empty-state" id="allergy-empty">
-      <div class="icon">✅</div>
-      <p>Реакций не обнаружено</p>
-    </div>
+    <div class="empty" id="allergy-empty"><div class="icon">✅</div><p>Реакций не зафиксировано</p></div>
   </div>
 </div>
 
-<!-- ========== PAGE: RECIPES ========== -->
+<!-- ====== RECIPES ====== -->
 <div class="page" id="page-recipes">
-  <div class="month-selector" id="recipe-age-filter">
-    <button class="month-btn active" onclick="filterRecipes('all', this)">Все</button>
-    <button class="month-btn" onclick="filterRecipes(6, this)">6+ мес</button>
-    <button class="month-btn" onclick="filterRecipes(7, this)">7+ мес</button>
-    <button class="month-btn" onclick="filterRecipes(8, this)">8+ мес</button>
-    <button class="month-btn" onclick="filterRecipes(10, this)">10+ мес</button>
-    <button class="month-btn" onclick="filterRecipes(12, this)">12+ мес</button>
+  <div class="filter-scroll" id="recipe-filters">
+    <button class="filter-pill active" onclick="filterR('all',this)">Все</button>
+    <button class="filter-pill" onclick="filterR(6,this)">6+ мес</button>
+    <button class="filter-pill" onclick="filterR(7,this)">7+ мес</button>
+    <button class="filter-pill" onclick="filterR(8,this)">8+ мес</button>
+    <button class="filter-pill" onclick="filterR(10,this)">10+ мес</button>
+    <button class="filter-pill" onclick="filterR(12,this)">12+ мес</button>
   </div>
-  <div id="recipes-list"></div>
+  <div id="recipe-list"></div>
 </div>
 
-<!-- ========== MODALS ========== -->
-<div class="modal-overlay" id="add-meal-modal">
-  <div class="modal">
-    <h3 id="modal-meal-title">Добавить блюдо</h3>
-    <div class="food-grid" id="food-grid"></div>
-    <input class="amount-input" id="amount-input" type="number" placeholder="Количество (мл/г)" min="1" max="500">
-    <button class="submit-btn" onclick="saveMeal()">Сохранить</button>
-    <button class="add-meal-btn" style="margin-top:8px;" onclick="closeModal('add-meal-modal')">Отмена</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="allergy-modal">
-  <div class="modal">
-    <h3>Записать реакцию</h3>
-    <p style="font-size:13px;color:var(--text-light);margin-bottom:12px;">Выберите продукт и симптомы</p>
-    <div class="food-grid" id="allergy-food-grid"></div>
-    <p style="font-size:13px;font-weight:600;margin-bottom:8px;">Симптомы:</p>
-    <div class="symptom-chips" id="symptom-chips">
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Сыпь</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Покраснение</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Рвота</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Понос</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Вздутие</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Колики</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Отек</div>
-      <div class="symptom-chip" onclick="toggleSymptom(this)">Насморк</div>
+<!-- ====== MODALS ====== -->
+<div class="modal-bg" id="add-modal">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-content">
+      <h3 id="add-title">Добавить</h3>
+      <div class="food-grid" id="fg"></div>
+      <input class="input-field" id="amt" type="number" placeholder="Количество (мл/г)" min="1" max="500">
+      <button class="btn-primary" onclick="saveMeal()">Сохранить</button>
+      <button class="btn-secondary" onclick="closeM('add-modal')">Отмена</button>
     </div>
-    <button class="submit-btn" onclick="saveAllergy()">Сохранить</button>
-    <button class="add-meal-btn" style="margin-top:8px;" onclick="closeModal('allergy-modal')">Отмена</button>
   </div>
 </div>
 
-<!-- Bottom Navigation -->
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="showPage('calendar', this)">
-    <span class="icon">📅</span>Календарь
-  </button>
-  <button class="nav-item" onclick="showPage('tracker', this)">
-    <span class="icon">📝</span>Трекер
-  </button>
-  <button class="nav-item" onclick="showPage('allergy', this)">
-    <span class="icon">⚠️</span>Реакции
-  </button>
-  <button class="nav-item" onclick="showPage('recipes', this)">
-    <span class="icon">👩‍🍳</span>Рецепты
-  </button>
+<div class="modal-bg" id="allergy-sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-content">
+      <h3>Записать реакцию</h3>
+      <div class="section-header" style="padding-top:0">Продукт</div>
+      <div class="food-grid" id="afg"></div>
+      <div class="section-header">Симптомы</div>
+      <div class="chips" id="symptom-chips">
+        <button class="chip" onclick="togChip(this)">Сыпь</button>
+        <button class="chip" onclick="togChip(this)">Покраснение</button>
+        <button class="chip" onclick="togChip(this)">Рвота</button>
+        <button class="chip" onclick="togChip(this)">Понос</button>
+        <button class="chip" onclick="togChip(this)">Вздутие</button>
+        <button class="chip" onclick="togChip(this)">Колики</button>
+        <button class="chip" onclick="togChip(this)">Отек</button>
+        <button class="chip" onclick="togChip(this)">Насморк</button>
+      </div>
+      <button class="btn-primary" onclick="saveAllergy()">Сохранить</button>
+      <button class="btn-secondary" onclick="closeM('allergy-sheet')">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- Tab bar -->
+<nav class="tab-bar">
+  <button class="tab-item active" onclick="go('calendar',this)"><span class="icon">📅</span>Календарь</button>
+  <button class="tab-item" onclick="go('tracker',this)"><span class="icon">📝</span>Трекер</button>
+  <button class="tab-item" onclick="go('allergy',this)"><span class="icon">⚠️</span>Реакции</button>
+  <button class="tab-item" onclick="go('recipes',this)"><span class="icon">👩‍🍳</span>Рецепты</button>
 </nav>
 
 <script>
-// ============ DATA ============
-const PRODUCTS_BY_AGE = {
-  6: [
-    { emoji: '🥦', name: 'Брокколи', desc: 'Пюре, начинать с 1 ч.л.', tag: 'new' },
-    { emoji: '🥒', name: 'Кабачок', desc: 'Идеальный первый овощ', tag: 'new' },
-    { emoji: '🥕', name: 'Цветная капуста', desc: 'Легко усваивается', tag: 'new' },
-    { emoji: '🥔', name: 'Картофель', desc: 'Пюре, небольшие порции', tag: 'new' },
-    { emoji: '🍐', name: 'Груша', desc: 'Первый фрукт, мягкое пюре', tag: 'new' },
-    { emoji: '🍎', name: 'Яблоко', desc: 'Запеченное или пюре', tag: 'new' },
-    { emoji: '🌾', name: 'Рисовая каша', desc: 'Безмолочная, без глютена', tag: 'new' },
-    { emoji: '🌽', name: 'Гречневая каша', desc: 'Безмолочная, гипоаллергенная', tag: 'new' },
-  ],
-  7: [
-    { emoji: '🥕', name: 'Морковь', desc: 'Пюре, богата витамином А', tag: 'new' },
-    { emoji: '🎃', name: 'Тыква', desc: 'Сладкое пюре, дети любят', tag: 'new' },
-    { emoji: '🍌', name: 'Банан', desc: 'Размять вилкой', tag: 'new' },
-    { emoji: '🥣', name: 'Овсяная каша', desc: 'Безмолочная', tag: 'new' },
-    { emoji: '🍗', name: 'Индейка', desc: 'Пюре, первое мясо', tag: 'new' },
-    { emoji: '🐰', name: 'Кролик', desc: 'Гипоаллергенное мясо', tag: 'new' },
-    { emoji: '🧈', name: 'Слив. масло', desc: 'Добавлять в каши, 1/4 ч.л.', tag: 'caution' },
-    { emoji: '🫒', name: 'Раст. масло', desc: 'В овощные пюре, 1 ч.л.', tag: 'new' },
-  ],
-  8: [
-    { emoji: '🐔', name: 'Курица', desc: 'Пюре или мелко нарезанная', tag: 'new' },
-    { emoji: '🥩', name: 'Говядина', desc: 'Пюре, источник железа', tag: 'new' },
-    { emoji: '🫘', name: 'Чечевица', desc: 'Пюре, растительный белок', tag: 'new' },
-    { emoji: '🍑', name: 'Персик', desc: 'Пюре или мягкие кусочки', tag: 'new' },
-    { emoji: '🫐', name: 'Черника', desc: 'Размять, антиоксиданты', tag: 'new' },
-    { emoji: '🍞', name: 'Хлеб пшеничный', desc: 'Маленькие кусочки, пробовать', tag: 'caution' },
-    { emoji: '🥚', name: 'Желток', desc: 'Начинать с 1/4 желтка', tag: 'caution' },
-    { emoji: '🧀', name: 'Творог', desc: 'Детский, начинать с 1 ч.л.', tag: 'new' },
-  ],
-  9: [
-    { emoji: '🐟', name: 'Белая рыба', desc: 'Треска, хек — пюре', tag: 'caution' },
-    { emoji: '🥛', name: 'Кефир', desc: 'Детский, с 9 месяцев', tag: 'new' },
-    { emoji: '🍓', name: 'Клубника', desc: 'Осторожно, аллерген', tag: 'caution' },
-    { emoji: '🍊', name: 'Апельсин', desc: 'Сок разбавленный, аллерген', tag: 'caution' },
-    { emoji: '🥐', name: 'Макароны', desc: 'Мелкие, хорошо разваренные', tag: 'new' },
-    { emoji: '🫑', name: 'Болгарский перец', desc: 'Запеченный, пюре', tag: 'new' },
-    { emoji: '🍅', name: 'Помидор', desc: 'Без кожицы, аллерген', tag: 'caution' },
-    { emoji: '🧅', name: 'Лук', desc: 'В составе блюд, вареный', tag: 'new' },
-  ],
-  10: [
-    { emoji: '🥗', name: 'Салат/шпинат', desc: 'Мелко нарезанный в блюда', tag: 'new' },
-    { emoji: '🫛', name: 'Горох', desc: 'Пюре, можно целый', tag: 'new' },
-    { emoji: '🍇', name: 'Виноград', desc: 'Разрезать на 4 части!', tag: 'caution' },
-    { emoji: '🥭', name: 'Манго', desc: 'Мягкие кусочки', tag: 'new' },
-    { emoji: '🍳', name: 'Яйцо целое', desc: 'Если нет реакции на желток', tag: 'caution' },
-    { emoji: '🧁', name: 'Детское печенье', desc: 'Без сахара, растворимое', tag: 'new' },
-  ],
-  11: [
-    { emoji: '🍄', name: 'Грибы', desc: 'Шампиньоны, мелко, осторожно', tag: 'caution' },
-    { emoji: '🥜', name: 'Ореховая паста', desc: 'Тонким слоем, аллерген!', tag: 'caution' },
-    { emoji: '🍯', name: 'Мед', desc: 'ЗАПРЕЩЕН до 12 месяцев!', tag: 'avoid' },
-    { emoji: '🧃', name: 'Сок', desc: 'Разбавленный, не более 60мл', tag: 'caution' },
-    { emoji: '🐄', name: 'Коровье молоко', desc: 'Только в каши, не пить!', tag: 'caution' },
-  ],
-  12: [
-    { emoji: '🐄', name: 'Цельное молоко', desc: 'Можно как напиток', tag: 'new' },
-    { emoji: '🍯', name: 'Мед', desc: 'Можно пробовать с 12 мес', tag: 'caution' },
-    { emoji: '🍫', name: 'Шоколад', desc: 'Не рекомендуется до 3 лет', tag: 'avoid' },
-    { emoji: '🥜', name: 'Орехи целые', desc: 'Опасность удушья до 3 лет!', tag: 'avoid' },
-    { emoji: '🧂', name: 'Соль', desc: 'Минимум, до 1 года не нужна', tag: 'caution' },
-    { emoji: '🍬', name: 'Сахар', desc: 'Избегать как можно дольше', tag: 'avoid' },
-    { emoji: '🥩', name: 'Колбаса/сосиски', desc: 'Не рекомендуется до 3 лет', tag: 'avoid' },
-    { emoji: '🐟', name: 'Красная рыба', desc: 'Можно пробовать, аллерген', tag: 'caution' },
-  ]
-};
+// ===== DATA =====
+const PRODS={6:[{e:'🥦',n:'Брокколи',d:'Пюре, начинать с 1 ч.л.',t:'new'},{e:'🥒',n:'Кабачок',d:'Идеальный первый овощ',t:'new'},{e:'🥕',n:'Цветная капуста',d:'Легко усваивается',t:'new'},{e:'🥔',n:'Картофель',d:'Пюре, небольшие порции',t:'new'},{e:'🍐',n:'Груша',d:'Первый фрукт, мягкое пюре',t:'new'},{e:'🍎',n:'Яблоко',d:'Запеченное или пюре',t:'new'},{e:'🌾',n:'Рисовая каша',d:'Безмолочная, без глютена',t:'new'},{e:'🌽',n:'Гречневая каша',d:'Безмолочная',t:'new'}],
+7:[{e:'🥕',n:'Морковь',d:'Богата витамином А',t:'new'},{e:'🎃',n:'Тыква',d:'Сладкое пюре',t:'new'},{e:'🍌',n:'Банан',d:'Размять вилкой',t:'new'},{e:'🥣',n:'Овсяная каша',d:'Безмолочная',t:'new'},{e:'🍗',n:'Индейка',d:'Первое мясо, пюре',t:'new'},{e:'🐰',n:'Кролик',d:'Гипоаллергенное мясо',t:'new'},{e:'🧈',n:'Слив. масло',d:'В каши, 1/4 ч.л.',t:'caution'},{e:'🫒',n:'Раст. масло',d:'В овощные пюре',t:'new'}],
+8:[{e:'🐔',n:'Курица',d:'Пюре или мелко',t:'new'},{e:'🥩',n:'Говядина',d:'Источник железа',t:'new'},{e:'🫘',n:'Чечевица',d:'Растительный белок',t:'new'},{e:'🍑',n:'Персик',d:'Мягкие кусочки',t:'new'},{e:'🫐',n:'Черника',d:'Размять',t:'new'},{e:'🍞',n:'Хлеб',d:'Маленькие кусочки',t:'caution'},{e:'🥚',n:'Желток',d:'Начинать с 1/4',t:'caution'},{e:'🧀',n:'Творог',d:'Детский, с 1 ч.л.',t:'new'}],
+9:[{e:'🐟',n:'Белая рыба',d:'Треска, хек',t:'caution'},{e:'🥛',n:'Кефир',d:'Детский',t:'new'},{e:'🍓',n:'Клубника',d:'Аллерген',t:'caution'},{e:'🍊',n:'Апельсин',d:'Разбавленный сок',t:'caution'},{e:'🥐',n:'Макароны',d:'Мелкие, разваренные',t:'new'},{e:'🫑',n:'Болг. перец',d:'Запеченный',t:'new'},{e:'🍅',n:'Помидор',d:'Без кожицы',t:'caution'},{e:'🧅',n:'Лук',d:'Вареный, в блюдах',t:'new'}],
+10:[{e:'🥗',n:'Шпинат',d:'Мелко в блюда',t:'new'},{e:'🫛',n:'Горох',d:'Пюре или целый',t:'new'},{e:'🍇',n:'Виноград',d:'Разрезать на 4 части!',t:'caution'},{e:'🥭',n:'Манго',d:'Мягкие кусочки',t:'new'},{e:'🍳',n:'Яйцо целое',d:'Если нет реакции на желток',t:'caution'},{e:'🧁',n:'Дет. печенье',d:'Без сахара',t:'new'}],
+11:[{e:'🍄',n:'Грибы',d:'Шампиньоны, мелко',t:'caution'},{e:'🥜',n:'Орех. паста',d:'Тонким слоем',t:'caution'},{e:'🍯',n:'Мед',d:'ЗАПРЕЩЕН до 12 мес!',t:'avoid'},{e:'🧃',n:'Сок',d:'Разбавленный, до 60мл',t:'caution'},{e:'🐄',n:'Коровье молоко',d:'Только в каши',t:'caution'}],
+12:[{e:'🐄',n:'Цельное молоко',d:'Можно как напиток',t:'new'},{e:'🍯',n:'Мед',d:'Можно с 12 мес',t:'caution'},{e:'🍫',n:'Шоколад',d:'Не рек. до 3 лет',t:'avoid'},{e:'🥜',n:'Орехи целые',d:'Опасность удушья!',t:'avoid'},{e:'🧂',n:'Соль',d:'Минимум',t:'caution'},{e:'🍬',n:'Сахар',d:'Избегать',t:'avoid'},{e:'🥩',n:'Колбаса',d:'Не рек. до 3 лет',t:'avoid'},{e:'🐟',n:'Красная рыба',d:'Аллерген',t:'caution'}]};
 
-const TIPS = {
-  6: 'Начинайте с однокомпонентных пюре. Давайте по 1 чайной ложке и увеличивайте за 5-7 дней до полной порции (100-150г). Новый продукт вводите утром, чтобы отследить реакцию.',
-  7: 'Можно начинать мясо! Пюре из индейки или кролика — гипоаллергенные варианты. Комбинируйте овощи с мясом. Порция мяса: 30-50г.',
-  8: 'Время текстур! Не всё нужно перетирать — можно оставлять мягкие кусочки. Ребенок учится жевать. Пробуйте finger food — мягкие палочки овощей.',
-  9: 'Рыба — отличный источник Омега-3. Начните с белой рыбы (треска, хек). Давайте 2 раза в неделю вместо мяса. Кефир вводите постепенно.',
-  10: 'Ребенок может есть почти всё! Главное — правильная консистенция. Режьте виноград и помидоры черри на 4 части. Следите за размером кусочков.',
-  11: 'Приближается год! Ребенок переходит на общий стол. Готовьте без соли и сахара, добавляйте специи (укроп, петрушка). Мед запрещен до 12 месяцев!',
-  12: 'С года можно цельное молоко, мед, более разнообразное меню. Но избегайте: орехов целиком (опасность удушья), сосисок, шоколада, грибов лесных.'
-};
+const TIPS={6:'Начинайте с однокомпонентных пюре. Давайте 1 ч.л. и увеличивайте за 5-7 дней до 100-150г. Новый продукт утром.',7:'Можно мясо! Пюре из индейки или кролика. Комбинируйте овощи с мясом. Порция мяса: 30-50г.',8:'Время текстур! Оставляйте мягкие кусочки. Пробуйте finger food.',9:'Рыба — источник Омега-3. Треска, хек — 2 раза в неделю вместо мяса.',10:'Ребенок может есть почти всё! Режьте виноград на 4 части.',11:'Приближается год! Готовьте без соли и сахара. Мед запрещен до 12 мес!',12:'С года можно молоко, мед. Избегайте: целых орехов, сосисок, шоколада.'};
 
-const ALL_FOODS = [
-  { emoji: '🥦', name: 'Брокколи' }, { emoji: '🥒', name: 'Кабачок' },
-  { emoji: '🥕', name: 'Морковь' }, { emoji: '🎃', name: 'Тыква' },
-  { emoji: '🥔', name: 'Картофель' }, { emoji: '🍐', name: 'Груша' },
-  { emoji: '🍎', name: 'Яблоко' }, { emoji: '🍌', name: 'Банан' },
-  { emoji: '🌾', name: 'Рисовая каша' }, { emoji: '🌽', name: 'Гречка' },
-  { emoji: '🥣', name: 'Овсянка' }, { emoji: '🍗', name: 'Индейка' },
-  { emoji: '🐰', name: 'Кролик' }, { emoji: '🐔', name: 'Курица' },
-  { emoji: '🥩', name: 'Говядина' }, { emoji: '🐟', name: 'Рыба' },
-  { emoji: '🥚', name: 'Яйцо' }, { emoji: '🧀', name: 'Творог' },
-  { emoji: '🥛', name: 'Кефир' }, { emoji: '🍓', name: 'Ягоды' },
-  { emoji: '🍑', name: 'Персик' }, { emoji: '🍞', name: 'Хлеб' },
-  { emoji: '🥐', name: 'Макароны' }, { emoji: '🫘', name: 'Бобовые' },
+const FOODS=[{e:'🥦',n:'Брокколи'},{e:'🥒',n:'Кабачок'},{e:'🥕',n:'Морковь'},{e:'🎃',n:'Тыква'},{e:'🥔',n:'Картофель'},{e:'🍐',n:'Груша'},{e:'🍎',n:'Яблоко'},{e:'🍌',n:'Банан'},{e:'🌾',n:'Рис. каша'},{e:'🌽',n:'Гречка'},{e:'🥣',n:'Овсянка'},{e:'🍗',n:'Индейка'},{e:'🐰',n:'Кролик'},{e:'🐔',n:'Курица'},{e:'🥩',n:'Говядина'},{e:'🐟',n:'Рыба'},{e:'🥚',n:'Яйцо'},{e:'🧀',n:'Творог'},{e:'🥛',n:'Кефир'},{e:'🍓',n:'Ягоды'},{e:'🍑',n:'Персик'},{e:'🍞',n:'Хлеб'},{e:'🥐',n:'Макароны'},{e:'🫘',n:'Бобовые'}];
+
+const RECIPES=[
+{title:'Пюре из кабачка',e:'🥒',age:6,time:'15 мин',tags:['первый прикорм'],ing:'Кабачок 150г, вода 100мл',steps:'1. Очистить от кожицы и семян\n2. Нарезать кубиками\n3. Варить 10 мин\n4. Пюрировать блендером\n5. Добавить 1 ч.л. масла'},
+{title:'Яблочно-грушевое пюре',e:'🍎',age:6,time:'20 мин',tags:['фрукты'],ing:'Яблоко 1 шт, груша 1 шт',steps:'1. Очистить, удалить сердцевину\n2. Нарезать мелко\n3. Запечь 15 мин при 180°C\n4. Пюрировать'},
+{title:'Гречневая каша',e:'🌽',age:6,time:'20 мин',tags:['каша'],ing:'Гречка 2 ст.л., вода 200мл, масло 1/4 ч.л.',steps:'1. Промыть гречку\n2. Смолоть в муку\n3. Варить 15 мин помешивая\n4. Добавить масло'},
+{title:'Индейка с брокколи',e:'🍗',age:7,time:'30 мин',tags:['мясо','обед'],ing:'Индейка 50г, брокколи 100г, масло 1 ч.л.',steps:'1. Отварить индейку 20 мин\n2. Сварить брокколи 7 мин\n3. Пюрировать вместе\n4. Добавить масло'},
+{title:'Тыквенный суп',e:'🎃',age:7,time:'25 мин',tags:['суп'],ing:'Тыква 200г, картофель 50г, морковь 30г',steps:'1. Очистить и нарезать\n2. Варить 15-20 мин\n3. Пюрировать\n4. Добавить масло'},
+{title:'Рисовая каша с персиком',e:'🍑',age:8,time:'20 мин',tags:['каша','фрукты'],ing:'Рисовая мука 2 ст.л., персик 1/2 шт',steps:'1. Сварить кашу на воде\n2. Персик очистить, мелко нарезать\n3. Добавить в кашу\n4. Размять вилкой'},
+{title:'Котлетки из кролика',e:'🐰',age:8,time:'35 мин',tags:['мясо','finger food'],ing:'Кролик 100г, кабачок 50г, овсянка 1 ст.л.',steps:'1. Мясо и кабачок через мясорубку\n2. Добавить овсянку\n3. Сформировать котлетки\n4. На пару 20-25 мин'},
+{title:'Рыбное суфле',e:'🐟',age:9,time:'40 мин',tags:['рыба'],ing:'Треска 100г, морковь 30г, яйцо 1/2, молоко 30мл',steps:'1. Отварить рыбу и морковь\n2. Пюрировать\n3. Добавить желток и молоко\n4. Белок взбить, ввести\n5. Запекать 20 мин при 180°C'},
+{title:'Творожная запеканка',e:'🍌',age:10,time:'35 мин',tags:['творог','десерт'],ing:'Творог 100г, банан 1/2, яйцо 1, манка 1 ст.л.',steps:'1. Размять творог с бананом\n2. Добавить яйцо и манку\n3. Перемешать\n4. Запекать 25 мин при 180°C'},
+{title:'Овощное рагу',e:'🥕',age:10,time:'30 мин',tags:['овощи'],ing:'Кабачок 80г, морковь 50г, картофель 50г, лук 20г',steps:'1. Нарезать мелкими кубиками\n2. Лук обжарить 2 мин\n3. Добавить овощи и воду\n4. Тушить 20 мин под крышкой'},
+{title:'Куриные фрикадельки',e:'🐔',age:12,time:'30 мин',tags:['мясо'],ing:'Куриная грудка 150г, хлеб 30г, лук 20г, яйцо 1',steps:'1. Курицу и лук через мясорубку\n2. Хлеб замочить, отжать\n3. Добавить яйцо\n4. Скатать шарики\n5. Варить 15 мин'},
+{title:'Банановые панкейки',e:'🥞',age:12,time:'20 мин',tags:['завтрак','finger food'],ing:'Банан 1, яйцо 1, овсяная мука 3 ст.л.',steps:'1. Размять банан\n2. Добавить яйцо и муку\n3. Перемешать\n4. Жарить на сухой сковороде\n5. По 2 мин с каждой стороны'},
 ];
 
-const RECIPES = [
-  { title: 'Пюре из кабачка', emoji: '🥒', age: 6, time: '15 мин', tags: ['первый прикорм', 'овощи'],
-    ingredients: 'Кабачок — 150г, вода — 100мл',
-    steps: '1. Очистить кабачок от кожицы и семян.\n2. Нарезать кубиками.\n3. Варить 10 минут до мягкости.\n4. Пюрировать блендером до однородности.\n5. Можно добавить 1 ч.л. растительного масла.' },
-  { title: 'Яблочно-грушевое пюре', emoji: '🍎', age: 6, time: '20 мин', tags: ['фрукты', 'десерт'],
-    ingredients: 'Яблоко — 1 шт, груша — 1 шт, вода — 50мл',
-    steps: '1. Очистить фрукты, удалить сердцевину.\n2. Нарезать мелкими кубиками.\n3. Запечь в духовке 15 мин при 180°C.\n4. Пюрировать вилкой или блендером.\n5. Подавать теплым.' },
-  { title: 'Каша гречневая с маслом', emoji: '🌽', age: 6, time: '20 мин', tags: ['каша', 'безглютеновая'],
-    ingredients: 'Гречка — 2 ст.л., вода — 200мл, масло сливочное — 1/4 ч.л.',
-    steps: '1. Промыть гречку.\n2. Смолоть в кофемолке до состояния муки.\n3. Варить в воде, помешивая, 15 мин.\n4. Добавить масло.\n5. Остудить до комфортной температуры.' },
-  { title: 'Пюре из индейки с брокколи', emoji: '🍗', age: 7, time: '30 мин', tags: ['мясо', 'обед'],
-    ingredients: 'Индейка — 50г, брокколи — 100г, вода — 150мл, масло растительное — 1 ч.л.',
-    steps: '1. Отварить индейку до готовности (20 мин).\n2. Отдельно сварить брокколи (7 мин).\n3. Пюрировать вместе блендером.\n4. Добавить масло и бульон для консистенции.' },
-  { title: 'Тыквенный суп-пюре', emoji: '🎃', age: 7, time: '25 мин', tags: ['суп', 'овощи'],
-    ingredients: 'Тыква — 200г, картофель — 50г, морковь — 30г, вода — 200мл',
-    steps: '1. Очистить и нарезать все овощи.\n2. Варить 15-20 минут до мягкости.\n3. Пюрировать блендером.\n4. Добавить немного бульона для нужной густоты.\n5. Можно добавить каплю масла.' },
-  { title: 'Рисовая каша с персиком', emoji: '🍑', age: 8, time: '20 мин', tags: ['каша', 'фрукты'],
-    ingredients: 'Рисовая мука — 2 ст.л., вода — 150мл, персик — 1/2 шт',
-    steps: '1. Сварить рисовую кашу на воде.\n2. Персик очистить, нарезать мелко.\n3. Добавить персик в горячую кашу.\n4. Размять вилкой.\n5. Остудить и подавать.' },
-  { title: 'Котлетки из кролика', emoji: '🐰', age: 8, time: '35 мин', tags: ['мясо', 'finger food'],
-    ingredients: 'Кролик — 100г, кабачок — 50г, овсянка — 1 ст.л.',
-    steps: '1. Мясо и кабачок прокрутить в мясорубке.\n2. Добавить овсянку, перемешать.\n3. Сформировать маленькие котлетки.\n4. Готовить на пару 20-25 минут.\n5. Подавать тёплыми, можно размять.' },
-  { title: 'Рыбное суфле', emoji: '🐟', age: 9, time: '40 мин', tags: ['рыба', 'обед'],
-    ingredients: 'Треска — 100г, морковь — 30г, яйцо — 1/2 шт, молоко — 30мл',
-    steps: '1. Отварить рыбу и морковь.\n2. Пюрировать в блендере.\n3. Добавить желток и молоко.\n4. Белок взбить и аккуратно ввести.\n5. Выложить в формочку, запекать 20 мин при 180°C.' },
-  { title: 'Творожная запеканка с бананом', emoji: '🍌', age: 10, time: '35 мин', tags: ['творог', 'десерт'],
-    ingredients: 'Творог — 100г, банан — 1/2 шт, яйцо — 1 шт, манка — 1 ст.л.',
-    steps: '1. Размять творог с бананом.\n2. Добавить яйцо и манку.\n3. Перемешать до однородности.\n4. Выложить в формочку.\n5. Запекать 25 мин при 180°C.' },
-  { title: 'Овощное рагу', emoji: '🥕', age: 10, time: '30 мин', tags: ['овощи', 'обед'],
-    ingredients: 'Кабачок — 80г, морковь — 50г, картофель — 50г, лук — 20г, масло — 1 ч.л.',
-    steps: '1. Все овощи нарезать мелкими кубиками.\n2. Лук обжарить на масле 2 мин.\n3. Добавить остальные овощи и воду.\n4. Тушить 20 минут под крышкой.\n5. Не пюрировать — оставить кусочки.' },
-  { title: 'Куриные фрикадельки', emoji: '🐔', age: 12, time: '30 мин', tags: ['мясо', 'finger food'],
-    ingredients: 'Куриная грудка — 150г, хлеб — 30г, лук — 20г, яйцо — 1 шт',
-    steps: '1. Пропустить курицу и лук через мясорубку.\n2. Хлеб замочить в воде, отжать, добавить.\n3. Вбить яйцо, перемешать.\n4. Скатать маленькие шарики.\n5. Варить в кипящей воде 15 минут.' },
-  { title: 'Банановые панкейки', emoji: '🥞', age: 12, time: '20 мин', tags: ['завтрак', 'finger food'],
-    ingredients: 'Банан — 1 шт, яйцо — 1 шт, овсяная мука — 3 ст.л.',
-    steps: '1. Размять банан вилкой.\n2. Добавить яйцо и муку.\n3. Перемешать до однородности.\n4. Жарить маленькие панкейки на сухой сковороде.\n5. По 2 минуты с каждой стороны.' },
-];
+// ===== STATE =====
+let age=6,curDate=new Date(),curMeal='',selFood=null,selAFood=null;
+let log=JSON.parse(localStorage.getItem('ml')||'{}');
+let allergies=JSON.parse(localStorage.getItem('al')||'[]');
+function save(){try{localStorage.setItem('ml',JSON.stringify(log));localStorage.setItem('al',JSON.stringify(allergies))}catch(e){}}
 
-// ============ STATE ============
-let currentAge = 6;
-let currentDate = new Date();
-let currentMealType = '';
-let selectedFood = null;
-let selectedAllergyFood = null;
-
-// Load from localStorage alternative (in-memory for PWA)
-let mealLog = JSON.parse(localStorage.getItem('mealLog') || '{}');
-let allergyLog = JSON.parse(localStorage.getItem('allergyLog') || '[]');
-
-function save() {
-  try {
-    localStorage.setItem('mealLog', JSON.stringify(mealLog));
-    localStorage.setItem('allergyLog', JSON.stringify(allergyLog));
-  } catch(e) {}
-}
-
-// ============ NAVIGATION ============
-function showPage(pageId, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + pageId).classList.add('active');
+// ===== NAV =====
+const titles={calendar:['Прикорм','Календарь прикорма с 6 месяцев'],tracker:['Трекер','Что ел малыш сегодня'],allergy:['Реакции','Отслеживание аллергий'],recipes:['Рецепты','Блюда для малыша']};
+function go(p,btn){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
   btn.classList.add('active');
-  if (pageId === 'tracker') renderTracker();
-  if (pageId === 'allergy') renderAllergies();
-  if (pageId === 'recipes') renderRecipes('all');
+  document.getElementById('page-title').textContent=titles[p][0];
+  document.getElementById('page-subtitle').textContent=titles[p][1];
+  if(p==='tracker')renderTracker();
+  if(p==='allergy')renderAllergies();
+  if(p==='recipes')renderRecipes('all');
 }
 
-// ============ CALENDAR ============
-function changeAge(age) {
-  currentAge = parseInt(age);
-  document.getElementById('baby-age-text').textContent = `Возраст: ${age} месяцев`;
-  document.getElementById('age-select').value = age;
-  renderProducts();
-  document.getElementById('tip-text').textContent = TIPS[currentAge] || TIPS[12];
+// ===== CALENDAR =====
+function setAge(v){age=parseInt(v);document.getElementById('age-text').textContent=v+' месяцев';renderProds();document.getElementById('tip-text').textContent=TIPS[age]||TIPS[12]}
+function renderProds(){
+  const c=document.getElementById('product-list');
+  const ps=PRODS[age]||[];
+  c.innerHTML=ps.map(p=>`<div class="row"><div class="row-icon">${p.e}</div><div class="row-content"><div class="row-title">${p.n}</div><div class="row-subtitle">${p.d}</div></div><span class="row-accessory ${p.t==='new'?'acc-green':p.t==='caution'?'acc-orange':'acc-red'}">${p.t==='new'?'Новый':p.t==='caution'?'Осторожно':'Нельзя'}</span></div>`).join('');
 }
 
-function renderProducts() {
-  const container = document.getElementById('products-list');
-  const products = PRODUCTS_BY_AGE[currentAge] || [];
-  container.innerHTML = products.map(p => `
-    <div class="product-item">
-      <div class="product-emoji">${p.emoji}</div>
-      <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-desc">${p.desc}</div>
-      </div>
-      <span class="product-tag tag-${p.tag}">${p.tag === 'new' ? 'Новый' : p.tag === 'caution' ? 'Осторожно' : 'Нельзя'}</span>
-    </div>
-  `).join('');
-}
-
-// ============ TRACKER ============
-function getDateKey(date) {
-  return date.toISOString().split('T')[0];
-}
-
-function formatDate(date) {
-  const today = new Date();
-  const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
-  const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
-
-  if (getDateKey(date) === getDateKey(today)) return 'Сегодня';
-  if (getDateKey(date) === getDateKey(yesterday)) return 'Вчера';
-  if (getDateKey(date) === getDateKey(tomorrow)) return 'Завтра';
-
-  const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-  return `${date.getDate()} ${months[date.getMonth()]}`;
-}
-
-function changeDate(dir) {
-  currentDate.setDate(currentDate.getDate() + dir);
-  renderTracker();
-}
-
-function renderTracker() {
-  document.getElementById('tracker-date-text').textContent = formatDate(currentDate);
-  const key = getDateKey(currentDate);
-  const dayData = mealLog[key] || {};
-
-  let totalMeals = 0, totalProducts = 0, totalMl = 0;
-
-  ['breakfast', 'lunch', 'dinner', 'snack'].forEach(meal => {
-    const container = document.getElementById('meal-' + meal);
-    const items = dayData[meal] || [];
-    if (items.length > 0) totalMeals++;
-    totalProducts += items.length;
-    items.forEach(i => totalMl += (i.amount || 0));
-
-    container.innerHTML = items.map((item, idx) => `
-      <div class="logged-item">
-        <span class="name">${item.emoji} ${item.name}</span>
-        <span class="amount">${item.amount} мл/г</span>
-        <button class="delete-btn" onclick="deleteMeal('${key}','${meal}',${idx})">x</button>
-      </div>
-    `).join('');
+// ===== TRACKER =====
+function dk(d){return d.toISOString().split('T')[0]}
+function fmtDate(d){const t=new Date(),y=new Date(t);y.setDate(t.getDate()-1);if(dk(d)===dk(t))return'Сегодня';if(dk(d)===dk(y))return'Вчера';const m=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];return d.getDate()+' '+m[d.getMonth()]}
+function shiftDate(dir){curDate.setDate(curDate.getDate()+dir);renderTracker()}
+function renderTracker(){
+  document.getElementById('date-text').textContent=fmtDate(curDate);
+  const k=dk(curDate),day=log[k]||{};
+  let meals=0,items=0,ml=0;
+  ['breakfast','lunch','dinner','snack'].forEach(m=>{
+    const c=document.getElementById('m-'+m),arr=day[m]||[];
+    if(arr.length)meals++;items+=arr.length;arr.forEach(i=>ml+=(i.a||0));
+    c.innerHTML=arr.map((i,idx)=>`<div class="logged-item"><span class="name">${i.e} ${i.n}</span><span class="amount">${i.a} мл/г</span><button class="del-btn" onclick="delMeal('${k}','${m}',${idx})">x</button></div>`).join('');
   });
-
-  document.getElementById('stat-meals').textContent = totalMeals;
-  document.getElementById('stat-products').textContent = totalProducts;
-  document.getElementById('stat-ml').textContent = totalMl;
+  document.getElementById('s-meals').textContent=meals;
+  document.getElementById('s-items').textContent=items;
+  document.getElementById('s-ml').textContent=ml;
 }
-
-function openAddMeal(mealType) {
-  currentMealType = mealType;
-  selectedFood = null;
-  const titles = { breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус' };
-  document.getElementById('modal-meal-title').textContent = 'Добавить: ' + titles[mealType];
-
-  const grid = document.getElementById('food-grid');
-  grid.innerHTML = ALL_FOODS.map(f => `
-    <div class="food-option" onclick="selectFood(this, '${f.emoji}', '${f.name}')">
-      <span class="emoji">${f.emoji}</span>${f.name}
-    </div>
-  `).join('');
-
-  document.getElementById('amount-input').value = '';
-  document.getElementById('add-meal-modal').classList.add('active');
+function openAdd(meal){
+  curMeal=meal;selFood=null;
+  const names={breakfast:'Завтрак',lunch:'Обед',dinner:'Ужин',snack:'Перекус'};
+  document.getElementById('add-title').textContent=names[meal];
+  document.getElementById('fg').innerHTML=FOODS.map(f=>`<button class="food-cell" onclick="pickFood(this,'${f.e}','${f.n}')"><span class="emoji">${f.e}</span>${f.n}</button>`).join('');
+  document.getElementById('amt').value='';
+  document.getElementById('add-modal').classList.add('active');
 }
-
-function selectFood(el, emoji, name) {
-  document.querySelectorAll('#food-grid .food-option').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedFood = { emoji, name };
+function pickFood(el,e,n){document.querySelectorAll('#fg .food-cell').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');selFood={e,n}}
+function saveMeal(){
+  if(!selFood)return;const a=parseInt(document.getElementById('amt').value)||0;
+  const k=dk(curDate);if(!log[k])log[k]={};if(!log[k][curMeal])log[k][curMeal]=[];
+  log[k][curMeal].push({e:selFood.e,n:selFood.n,a});save();closeM('add-modal');renderTracker();
 }
+function delMeal(k,m,i){if(log[k]&&log[k][m]){log[k][m].splice(i,1);save();renderTracker()}}
 
-function saveMeal() {
-  if (!selectedFood) return;
-  const amount = parseInt(document.getElementById('amount-input').value) || 0;
-  const key = getDateKey(currentDate);
-  if (!mealLog[key]) mealLog[key] = {};
-  if (!mealLog[key][currentMealType]) mealLog[key][currentMealType] = [];
-  mealLog[key][currentMealType].push({ ...selectedFood, amount });
-  save();
-  closeModal('add-meal-modal');
-  renderTracker();
+// ===== ALLERGY =====
+function openAllergySheet(){
+  selAFood=null;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('afg').innerHTML=FOODS.map(f=>`<button class="food-cell" onclick="pickAFood(this,'${f.e}','${f.n}')"><span class="emoji">${f.e}</span>${f.n}</button>`).join('');
+  document.getElementById('allergy-sheet').classList.add('active');
 }
-
-function deleteMeal(key, meal, idx) {
-  if (mealLog[key] && mealLog[key][meal]) {
-    mealLog[key][meal].splice(idx, 1);
-    save();
-    renderTracker();
-  }
+function pickAFood(el,e,n){document.querySelectorAll('#afg .food-cell').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');selAFood={e,n}}
+function togChip(el){el.classList.toggle('selected')}
+function saveAllergy(){
+  if(!selAFood)return;const syms=[];document.querySelectorAll('.chip.selected').forEach(c=>syms.push(c.textContent));
+  if(!syms.length)return;allergies.push({food:selAFood,symptoms:syms,date:new Date().toLocaleDateString('ru-RU')});
+  save();closeM('allergy-sheet');renderAllergies();
 }
-
-// ============ ALLERGY ============
-function openAllergyModal() {
-  selectedAllergyFood = null;
-  document.querySelectorAll('.symptom-chip').forEach(c => c.classList.remove('selected'));
-
-  const grid = document.getElementById('allergy-food-grid');
-  grid.innerHTML = ALL_FOODS.map(f => `
-    <div class="food-option" onclick="selectAllergyFood(this, '${f.emoji}', '${f.name}')">
-      <span class="emoji">${f.emoji}</span>${f.name}
-    </div>
-  `).join('');
-
-  document.getElementById('allergy-modal').classList.add('active');
+function renderAllergies(){
+  const c=document.getElementById('allergy-list'),emp=document.getElementById('allergy-empty');
+  if(!allergies.length){emp.style.display='block';c.innerHTML='';c.appendChild(emp);return}
+  emp.style.display='none';
+  c.innerHTML=allergies.map((a,i)=>`<div class="allergy-card"><div class="emoji">${a.food.e}</div><div class="info"><div class="food">${a.food.n}</div><div class="symptoms">${a.symptoms.join(', ')}</div><div class="date">${a.date}</div></div><button class="del-btn" onclick="delAllergy(${i})">x</button></div>`).join('');
 }
+function delAllergy(i){allergies.splice(i,1);save();renderAllergies()}
 
-function selectAllergyFood(el, emoji, name) {
-  document.querySelectorAll('#allergy-food-grid .food-option').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedAllergyFood = { emoji, name };
+// ===== RECIPES =====
+function renderRecipes(f){
+  const c=document.getElementById('recipe-list');
+  const list=f==='all'?RECIPES:RECIPES.filter(r=>r.age<=f);
+  c.innerHTML=list.map((r,i)=>`<div class="recipe-card" onclick="togRecipe(${i})"><div class="recipe-top"><div class="emoji">${r.e}</div><div><div class="title">${r.title}</div><div class="meta">${r.age}+ мес · ${r.time}</div><div class="recipe-tags">${r.tags.map(t=>`<span class="recipe-tag">${t}</span>`).join('')}</div></div></div><div class="recipe-body" id="rb-${i}"><h4>Ингредиенты</h4><p>${r.ing}</p><h4>Приготовление</h4><p>${r.steps.replace(/\n/g,'<br>')}</p></div></div>`).join('');
 }
+function togRecipe(i){document.getElementById('rb-'+i).classList.toggle('open')}
+function filterR(f,btn){document.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRecipes(f)}
 
-function toggleSymptom(el) { el.classList.toggle('selected'); }
+// ===== MODALS =====
+function closeM(id){document.getElementById(id).classList.remove('active')}
+document.querySelectorAll('.modal-bg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('active')}));
 
-function saveAllergy() {
-  if (!selectedAllergyFood) return;
-  const symptoms = [];
-  document.querySelectorAll('.symptom-chip.selected').forEach(c => symptoms.push(c.textContent));
-  if (symptoms.length === 0) return;
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
 
-  allergyLog.push({
-    food: selectedAllergyFood,
-    symptoms,
-    date: new Date().toLocaleDateString('ru-RU')
-  });
-  save();
-  closeModal('allergy-modal');
-  renderAllergies();
-}
-
-function renderAllergies() {
-  const container = document.getElementById('allergy-list');
-  const empty = document.getElementById('allergy-empty');
-
-  if (allergyLog.length === 0) {
-    empty.style.display = 'block';
-    container.innerHTML = '';
-    container.appendChild(empty);
-    return;
-  }
-
-  empty.style.display = 'none';
-  container.innerHTML = allergyLog.map((a, idx) => `
-    <div class="allergy-item">
-      <div class="emoji">${a.food.emoji}</div>
-      <div class="allergy-info">
-        <div class="allergy-food">${a.food.name}</div>
-        <div class="allergy-symptoms">${a.symptoms.join(', ')}</div>
-        <div class="allergy-date">${a.date}</div>
-      </div>
-      <button class="delete-btn" onclick="deleteAllergy(${idx})">x</button>
-    </div>
-  `).join('');
-}
-
-function deleteAllergy(idx) {
-  allergyLog.splice(idx, 1);
-  save();
-  renderAllergies();
-}
-
-// ============ RECIPES ============
-function renderRecipes(ageFilter) {
-  const container = document.getElementById('recipes-list');
-  const filtered = ageFilter === 'all' ? RECIPES : RECIPES.filter(r => r.age <= ageFilter);
-
-  container.innerHTML = filtered.map((r, idx) => `
-    <div class="recipe-card" onclick="toggleRecipe(${idx})">
-      <div class="recipe-header">
-        <div class="recipe-emoji">${r.emoji}</div>
-        <div>
-          <div class="recipe-title">${r.title}</div>
-          <div class="recipe-meta">${r.age}+ мес | ${r.time}</div>
-          <div class="recipe-tags">${r.tags.map(t => `<span class="recipe-tag">${t}</span>`).join('')}</div>
-        </div>
-      </div>
-      <div class="recipe-body" id="recipe-body-${idx}">
-        <h4>Ингредиенты:</h4>
-        <p>${r.ingredients}</p>
-        <h4>Приготовление:</h4>
-        <p>${r.steps.replace(/\n/g, '<br>')}</p>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleRecipe(idx) {
-  const body = document.getElementById('recipe-body-' + idx);
-  body.classList.toggle('open');
-}
-
-function filterRecipes(age, btn) {
-  document.querySelectorAll('#recipe-age-filter .month-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderRecipes(age);
-}
-
-// ============ MODALS ============
-function closeModal(id) {
-  document.getElementById(id).classList.remove('active');
-}
-
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.classList.remove('active');
-  });
-});
-
-// ============ INIT ============
-renderProducts();
-renderRecipes('all');
-
-// Register service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+// ===== INIT =====
+renderProds();renderRecipes('all');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
